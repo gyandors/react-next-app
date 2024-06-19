@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 const details = [
   { id: '1', name: 'Yash', role: 'Senior Developer' },
   { id: '2', name: 'Vaibhav', role: 'Backend Developer' },
@@ -6,14 +8,17 @@ const details = [
 
 export default function AboutUsPage() {
   return (
-    <ul>
-      {details.map((d) => {
-        return (
-          <li key={d.id}>
-            Name: {d.name} Role: {d.role}
-          </li>
-        );
-      })}
-    </ul>
+    <>
+      <h1>List of Users</h1>
+      <ul>
+        {details.map((d) => {
+          return (
+            <li key={d.id}>
+              <Link href={`/about/${d.id}`}>{d.name}</Link>
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 }
