@@ -1,20 +1,49 @@
 import MeetupDetails from '@/components/meetups/MeetupDetails';
-import { useRouter } from 'next/router';
-import { meetups } from '..';
+import { dummy_meetups } from '..';
 
-export default function MeetupPage() {
-  const router = useRouter();
-
-  const matchedMeetup = meetups.find((m) => m.id === router.query.meetupId);
-
-  if (!matchedMeetup) return;
+export default function MeetupPage(props) {
+  const { meetupData } = props;
 
   return (
     <MeetupDetails
-      image={matchedMeetup.image}
-      title={matchedMeetup.title}
-      address={matchedMeetup.address}
-      description={matchedMeetup.description}
+      image={meetupData.image}
+      title={meetupData.title}
+      address={meetupData.address}
+      description={meetupData.description}
     />
   );
+}
+
+export async function getStaticPaths() {
+  return {
+    fallback: false,
+    paths: [
+      {
+        params: {
+          meetupId: 'm1',
+        },
+      },
+      {
+        params: {
+          meetupId: 'm2',
+        },
+      },
+      {
+        params: {
+          meetupId: 'm3',
+        },
+      },
+    ],
+  };
+}
+
+export async function getStaticProps(context) {
+  const meetupData = dummy_meetups.find(
+    (m) => m.id === context.params.meetupId
+  );
+  return {
+    props: {
+      meetupData: meetupData,
+    },
+  };
 }

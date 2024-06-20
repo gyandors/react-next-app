@@ -1,6 +1,6 @@
 import MeetupList from '@/components/meetups/MeetupList';
 
-export const meetups = [
+export const dummy_meetups = [
   {
     id: 'm1',
     title: 'First Meetup',
@@ -16,8 +16,32 @@ export const meetups = [
     address: 'Unit Number A1, Friend Pinnacle, Road No. 22, New Neheru',
     description: 'This is our Second Meetup',
   },
+  {
+    id: 'm3',
+    title: 'Second Meetup',
+    image: 'https://my.alfred.edu/zoom/_images/foster-lake.jpg',
+    address: 'Unit Number A1, Friend Pinnacle, Road No. 22, New Neheru',
+    description: 'This is our Second Meetup',
+  },
 ];
 
-export default function HomePage() {
-  return <MeetupList meetups={meetups} />;
+export default function HomePage(props) {
+  return <MeetupList meetups={props.meetups} />;
 }
+
+export async function getStaticProps() {
+  return {
+    props: {
+      meetups: dummy_meetups,
+    },
+  };
+}
+
+// export async function getServerSideProps(con) {
+//   console.log(con);
+//   return {
+//     props: {
+//       meetups: dummy_meetups,
+//     },
+//   };
+// }
