@@ -1,38 +1,37 @@
+import { MongoClient } from 'mongodb';
 import MeetupList from '@/components/meetups/MeetupList';
-
-export const dummy_meetups = [
-  {
-    id: 'm1',
-    title: 'First Meetup',
-    image:
-      'https://cubanvr.com/wp-content/uploads/2023/07/ai-image-generators.webp',
-    address: 'Unit Number G1, Dosti Pinnacle, Road No. 22, Neheru Nagar',
-    description: 'This is our First Meetup',
-  },
-  {
-    id: 'm2',
-    title: 'Second Meetup',
-    image: 'https://my.alfred.edu/zoom/_images/foster-lake.jpg',
-    address: 'Unit Number A1, Friend Pinnacle, Road No. 22, New Neheru',
-    description: 'This is our Second Meetup',
-  },
-  {
-    id: 'm3',
-    title: 'Second Meetup',
-    image: 'https://my.alfred.edu/zoom/_images/foster-lake.jpg',
-    address: 'Unit Number A1, Friend Pinnacle, Road No. 22, New Neheru',
-    description: 'This is our Second Meetup',
-  },
-];
 
 export default function HomePage(props) {
   return <MeetupList meetups={props.meetups} />;
 }
 
 export async function getStaticProps() {
+  //Option 1: When we are using api route
+  // const response = await fetch(
+  //   `${process.env.NEXT_PUBLIC_API_URL}/api/meetups`
+  // );
+
+  // const meetups = await response.json();
+
+  //Option 2: We can directly connect Mongo in this function as this function wont run on client side.
+  const client = await MongoClient.connect(
+    'mongodb+srv://sachin:CuzXJBNBtHkXntmt@cluster0.nilbj3c.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+  );
+
+  const db = client.db('meetups');
+  const collection = db.collection('meetups');
+  const meetups = await collection.find().toArray();
+
   return {
     props: {
-      meetups: dummy_meetups,
+      meetups: meetups.map((m) => {
+        return {
+          id: m._id.toString(),
+          title: m.title,
+          image: m.image,
+          address: m.address,
+        };
+      }),
     },
   };
 }
